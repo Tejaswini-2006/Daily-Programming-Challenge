@@ -1,0 +1,84 @@
+/*Day 4 of 30 
+
+Problem : Merge Two Sorted Arrays
+You are given two sorted arrays arr1 of size m and arr2 of size n. Your task is to merge these two arrays into a single sorted array without using any extra space (i.e., in-place merging). The elements in arr1 should be merged first, followed by the elements of arr2, resulting in both arrays being sorted after the merge.
+
+Input :
+Two sorted integer arrays arr1 of size m and arr2 of size n.
+Example : 
+arr1 = [1, 3, 5, 7]
+arr2 = [2, 4, 6, 8]
+
+Output :
+Both arr1 and arr2 should be sorted after the merge. Since you cannot use extra space, the final result will be reflected in arr1 and arr2.
+Example:
+arr1 = [1, 2, 3, 4]
+arr2 = [5, 6, 7, 8]
+*/
+
+
+#include <stdio.h>
+
+// Function to swap two numbers
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Function to merge two sorted arrays in-place
+void mergeArrays(int arr1[], int m, int arr2[], int n) {
+    int i = m - 1;  // last index of arr1
+    int j = 0;      // first index of arr2
+
+    // Compare and swap if needed
+    while (i >= 0 && j < n) {
+        if (arr1[i] > arr2[j]) {
+            swap(&arr1[i], &arr2[j]);
+        }
+        i--;
+        j++;
+    }
+
+    // Sort arr1
+    for (int x = 0; x < m - 1; x++) {
+        for (int y = 0; y < m - x - 1; y++) {
+            if (arr1[y] > arr1[y + 1]) {
+                swap(&arr1[y], &arr1[y + 1]);
+            }
+        }
+    }
+
+    // Sort arr2
+    for (int x = 0; x < n - 1; x++) {
+        for (int y = 0; y < n - x - 1; y++) {
+            if (arr2[y] > arr2[y + 1]) {
+                swap(&arr2[y], &arr2[y + 1]);
+            }
+        }
+    }
+}
+
+int main() {
+    int arr1[] = {1, 3, 5, 7};
+    int arr2[] = {2, 4, 6, 8};
+    int m = sizeof(arr1) / sizeof(arr1[0]);
+    int n = sizeof(arr2) / sizeof(arr2[0]);
+
+    mergeArrays(arr1, m, arr2, n);
+
+    printf("arr1: ");
+    for (int i = 0; i < m; i++) {
+        printf("%d ", arr1[i]);
+    }
+
+    printf("\narr2: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr2[i]);
+    }
+
+    return 0;
+}
+OUTPUT
+arr1: 1 2 3 4 
+arr2: 5 6 7 8 
