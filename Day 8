@@ -1,0 +1,60 @@
+/*Day 8 of 30
+
+Problem : Reverse a String Word by Word
+You are given a string s that consists of multiple words separated by spaces. Your task is to reverse the order of the words in the string. Words are defined as sequences of non-space characters. The output string should not contain leading or trailing spaces, and multiple spaces between words should be reduced to a single space.
+
+Input :
+A string s of length n (1 ≤ n ≤ 10^4) consisting of letters, digits, punctuation, and spaces.
+Input: "the sky is blue"
+
+Output :
+A string where the words in s are reversed, with a single space separating the words, and no leading or trailing spaces.
+Output: "blue is sky the"
+*/
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+void reverseWords(char *s) {
+    char *words[10000];   // store pointers to words
+    int count = 0;
+
+    // Remove leading spaces
+    while (*s && isspace((unsigned char)*s)) s++;
+
+    // Split words by spaces
+    char *token = strtok(s, " ");
+    while (token != NULL) {
+        words[count++] = token;
+        token = strtok(NULL, " ");
+    }
+
+    // Print words in reverse order
+    for (int i = count - 1; i >= 0; i--) {
+        printf("%s", words[i]);
+        if (i > 0) printf(" ");
+    }
+    printf("\n");
+}
+
+int main() {
+    char s[10005];
+
+    printf("Enter a string: ");
+    // Read a full line including spaces
+    if (fgets(s, sizeof(s), stdin) != NULL) {
+        // Remove trailing newline if present
+        size_t len = strlen(s);
+        if (len > 0 && s[len - 1] == '\n') {
+            s[len - 1] = '\0';
+        }
+
+        reverseWords(s);
+    }
+    return 0;
+}
+output
+Enter a string: Tejaswini and Samruddhi both are friends
+friends are both Samruddhi and Tejaswini
+
