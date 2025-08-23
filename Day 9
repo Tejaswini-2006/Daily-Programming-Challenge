@@ -1,0 +1,64 @@
+/*Day 9 of 30 
+
+Problem : Longest Common Prefix
+You are given an array of strings strs[], consisting of lowercase letters. Your task is to find the longest common prefix shared among all the strings. If there is no common prefix, return an empty string "".
+A common prefix is a substring that appears at the beginning of all the strings in the array. The task is to identify the longest such prefix that all strings share.
+
+Input :
+An array of strings strs[] where each string consists of lowercase English letters.
+Input: strs[] = ["flower", "flow", "flight"]
+
+Output :
+A string representing the longest common prefix. If no common prefix exists, return an empty string "".
+Output: "fl"
+*/
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+// Function to find the longest common prefix
+char* longestCommonPrefix(char strs[][200], int n) {
+    static char prefix[200];  // store the result
+    strcpy(prefix, strs[0]);  // assume first string as prefix
+    
+    for (int i = 1; i < n; i++) {
+        int j = 0;
+        while (prefix[j] && strs[i][j] && prefix[j] == strs[i][j]) {
+            j++;
+        }
+        prefix[j] = '\0';  // shorten prefix
+        if (prefix[0] == '\0') {
+            return "";  // no common prefix
+        }
+    }
+    return prefix;
+}
+
+int main() {
+    int n;
+    printf("Enter number of strings: ");
+    scanf("%d", &n);
+    
+    char strs[200][200];
+    for (int i = 0; i < n; i++) {
+        printf("Enter string %d: ", i + 1);
+        scanf("%s", strs[i]);
+    }
+    
+    char *result = longestCommonPrefix(strs, n);
+    if (strlen(result) == 0)
+        printf("Longest Common Prefix: \"\"\n");
+    else
+        printf("Longest Common Prefix: %s\n", result);
+    
+    return 0;
+}
+Output
+Enter number of strings: 3
+Enter string 1: flower
+Enter string 2: flow
+Enter string 3: flight
+Longest Common Prefix: fl
