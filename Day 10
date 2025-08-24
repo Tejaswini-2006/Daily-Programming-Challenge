@@ -1,0 +1,82 @@
+/*Day 10 of 30 
+
+Problem : Group Anagrams
+You are given an array of strings strs[]. Your task is to group all the strings that are anagrams of each other. An anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+The goal is to return the grouped anagrams as a list of lists, where each sublist contains words that are anagrams of each other.
+
+Input :
+An array of strings strs[] consisting of lowercase English letters.
+Input: strs[] = ["eat", "tea", "tan", "ate", "nat", "bat"]
+
+Output :
+A list of lists, where each sublist contains strings that are anagrams of each other. The order of the output groups does not matter.
+Output: [["eat", "tea", "ate"], ["tan", "nat"], ["bat"]]
+*/
+
+
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+// Function to sort characters in a string
+void sortString(char *str) {
+    int n = strlen(str);
+    for (int i = 0; i < n-1; i++) {
+        for (int j = i+1; j < n; j++) {
+            if (str[i] > str[j]) {
+                char temp = str[i];
+                str[i] = str[j];
+                str[j] = temp;
+            }
+        }
+    }
+}
+
+// Function to check if two strings are anagrams
+int isAnagram(char *s1, char *s2) {
+    if (strlen(s1) != strlen(s2)) return 0;
+    
+    char a[101], b[101];
+    strcpy(a, s1);
+    strcpy(b, s2);
+
+    sortString(a);
+    sortString(b);
+
+    return strcmp(a, b) == 0;
+}
+
+int main() {
+    char strs[6][10] = {"eat", "tea", "tan", "ate", "nat", "bat"};
+    int n = 6;
+
+    int used[6] = {0}; // to mark which words are already grouped
+
+    printf("Grouped Anagrams:\n");
+
+    for (int i = 0; i < n; i++) {
+        if (used[i]) continue;
+
+        printf("[");
+        printf("%s", strs[i]);
+        used[i] = 1;
+
+        for (int j = i+1; j < n; j++) {
+            if (!used[j] && isAnagram(strs[i], strs[j])) {
+                printf(", %s", strs[j]);
+                used[j] = 1;
+            }
+        }
+        printf("]\n");
+    }
+
+    return 0;
+}
+OUTPUT
+["eat", "tea", "tan", "ate", "nat", "bat"]
+Grouped Anagrams:
+[eat, tea, ate]
+[tan, nat]
+[bat]
+
