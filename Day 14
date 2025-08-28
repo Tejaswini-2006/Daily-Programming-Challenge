@@ -1,0 +1,70 @@
+/*Day 14 of 30 
+
+Problem : Count Substrings with Exactly K Distinct Characters
+You are given a string s of lowercase English alphabets and an integer k. Your task is to count all possible substrings of s that contain exactly k distinct characters.
+
+Input :
+* A string s consisting of lowercase English letters.
+* An integer k, where 1 ≤ 𝑘 ≤ 26
+* The length of the string satisfies 1 ≤ 𝑛 ≤ 104
+* Example - s = "pqpqs", k = 2
+
+Output :
+Return an integer that represents the number of substrings of s that contain exactly k distinct characters.
+Output: 7
+*/
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 256   // total ASCII chars, but we'll only use lowercase a-z
+
+// Function to count substrings with at most K distinct characters
+int atMostKDistinct(char *s, int k) {
+    int n = strlen(s);
+    int freq[MAX] = {0};
+    int left = 0, right = 0;
+    int distinct = 0;
+    int count = 0;
+
+    for (right = 0; right < n; right++) {
+        if (freq[s[right]] == 0)
+            distinct++;
+        freq[s[right]]++;
+
+        while (distinct > k) {
+            freq[s[left]]--;
+            if (freq[s[left]] == 0)
+                distinct--;
+            left++;
+        }
+        count += (right - left + 1);
+    }
+    return count;
+}
+
+// Main function to count substrings with exactly K distinct characters
+int countExactlyKDistinct(char *s, int k) {
+    if (k == 0) return 0;
+    return atMostKDistinct(s, k) - atMostKDistinct(s, k - 1);
+}
+
+int main() {
+    char s[10005];
+    int k;
+
+    printf("Enter string: ");
+    scanf("%s", s);
+    printf("Enter k: ");
+    scanf("%d", &k);
+
+    int result = countExactlyKDistinct(s, k);
+    printf("Number of substrings with exactly %d distinct characters: %d\n", k, result);
+
+    return 0;
+}
+OUTPUT
+Enter string: pqpqs
+Enter k: 2
+Number of substrings with exactly 2 distinct characters: 7
+
+
