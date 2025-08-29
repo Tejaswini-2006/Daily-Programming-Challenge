@@ -1,0 +1,77 @@
+/*Day 15 of 30 
+
+Problem : Find the Longest Substring Without Repeating Characters
+You are given a string S, and your task is to find the length of the longest substring that contains no repeating characters. A substring is a contiguous block of characters in the string.
+In this problem, you need to find the length of the longest substring where all the characters are unique. The substring can be formed by starting at any position in the string, but it must not contain any repeated characters.
+
+Input :
+* A string S, where 1≤∣S∣≤105(length of string).
+* Input: S = "abcabcbb"
+
+Output :
+An integer representing the length of the longest substring without repeating characters.
+Output: 3
+
+*/
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+#define ASCII_SIZE 256  // Total possible characters
+
+int longestUniqueSubstring(char *s) {
+    int n = strlen(s);
+    int lastIndex[ASCII_SIZE];   // Store last index of each character
+    for (int i = 0; i < ASCII_SIZE; i++)
+        lastIndex[i] = -1;
+
+    int maxLen = 0;   // Result
+    int start = 0;    // Starting index of current window
+
+    for (int end = 0; end < n; end++) {
+        char c = s[end];
+
+        // If character is seen before, move start
+        if (lastIndex[(unsigned char)c] >= start) {
+            start = lastIndex[(unsigned char)c] + 1;
+        }
+
+        // Update last index of character
+        lastIndex[(unsigned char)c] = end;
+
+        // Update maximum length
+        int windowLen = end - start + 1;
+        if (windowLen > maxLen)
+            maxLen = windowLen;
+    }
+
+    return maxLen;
+}
+
+int main() {
+    char s[100005];
+
+    printf("Enter a string: ");
+    scanf("%s", s);
+
+    int result = longestUniqueSubstring(s);
+    printf("Length of the longest substring without repeating characters: %d\n", result);
+
+    return 0;
+}
+
+OUTPUT
+Input: abcabcbb
+Output: 3
+
+Input: bbbbb
+Output: 1
+
+Input: pwwkew
+Output: 3
+
+Input: abcdefgh
+Output: 8
+
