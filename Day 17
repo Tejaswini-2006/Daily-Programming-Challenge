@@ -1,0 +1,63 @@
+/*Day 17 of 30 
+
+Problem : Prime Factorization of a Number
+Given a positive integer N, your task is to find its prime factorization. Return a list of prime numbers that multiply together to give N. If N is prime, the output should be a list containing only N.
+Prime factorization is the process of breaking down a number into the set of prime numbers that, when multiplied together, result in the original number. For example, if N = 18, its prime factors are [2, 3, 3] because 2×3×3=18.
+
+Input :
+* A single integer N, where 2≤N≤109
+* N = 18
+
+Output :
+A list of prime numbers representing the prime factorization of N.
+Output: [2, 3, 3]
+*/
+
+#include <stdio.h>
+
+// Function to print prime factorization
+void primeFactorization(long long n) {
+    // Print the number of 2s that divide n
+    while (n % 2 == 0) {
+        printf("2 ");
+        n /= 2;
+    }
+
+    // Check for odd factors
+    for (long long i = 3; i * i <= n; i += 2) {
+        while (n % i == 0) {
+            printf("%lld ", i);
+            n /= i;
+        }
+    }
+
+    // If n is a prime number greater than 2
+    if (n > 2) {
+        printf("%lld", n);
+    }
+}
+
+int main() {
+    long long N;
+    printf("Enter a number: ");
+    scanf("%lld", &N);
+
+    printf("Prime factors of %lld: ", N);
+    primeFactorization(N);
+    printf("\n");
+
+    return 0;
+}
+OUTPUT
+Input: 18
+Output: 2 3 3
+
+Input: 30
+Output: 2 3 5
+
+Input: 49
+Output: 7 7
+
+Input: 123456
+Output: 2 2 2 2 2 3 643
+
