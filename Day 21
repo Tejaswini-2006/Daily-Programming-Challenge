@@ -1,0 +1,119 @@
+/*Day 21 of 30
+
+Problem : Reverse a Stack Using Recursion
+You are given a stack of integers, and your task is to write a function that reverses the stack using recursion. You are not allowed to use any additional data structure (like arrays, lists, or another stack). The only operations you are allowed to perform are push, pop, and peek on the stack. The reversal must be done using recursion only.
+
+Input :
+* A stack of integers. The stack may contain positive, negative, or zero values.
+* Input: [1, 2, 3, 4]
+
+Output :
+The stack should be reversed, meaning the element that was at the bottom of the original stack should become the topmost element after the reversal.
+Output: [4, 3, 2, 1]
+*/
+ #include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 10000  // maximum stack size
+
+// Stack structure
+typedef struct {
+    int arr[MAX];
+    int top;
+} Stack;
+
+// Initialize stack
+void init(Stack *s) {
+    s->top = -1;
+}
+
+// Check if stack is empty
+int isEmpty(Stack *s) {
+    return s->top == -1;
+}
+
+// Check if stack is full
+int isFull(Stack *s) {
+    return s->top == MAX - 1;
+}
+
+// Push element into stack
+void push(Stack *s, int data) {
+    if (isFull(s)) {
+        printf("Stack Overflow\n");
+        return;
+    }
+    s->arr[++s->top] = data;
+}
+
+// Pop element from stack
+int pop(Stack *s) {
+    if (isEmpty(s)) {
+        printf("Stack Underflow\n");
+        exit(1);
+    }
+    return s->arr[s->top--];
+}
+
+// Peek top element
+int peek(Stack *s) {
+    if (isEmpty(s)) {
+        printf("Stack is empty\n");
+        exit(1);
+    }
+    return s->arr[s->top];
+}
+
+// Function to insert element at bottom of stack
+void insertAtBottom(Stack *s, int item) {
+    if (isEmpty(s)) {
+        push(s, item);
+        return;
+    }
+    int temp = pop(s);
+    insertAtBottom(s, item);
+    push(s, temp);
+}
+
+// Function to reverse stack using recursion
+void reverse(Stack *s) {
+    if (!isEmpty(s)) {
+        int temp = pop(s);
+        reverse(s);
+        insertAtBottom(s, temp);
+    }
+}
+
+// Function to display stack
+void display(Stack *s) {
+    for (int i = 0; i <= s->top; i++) {
+        printf("%d ", s->arr[i]);
+    }
+    printf("\n");
+}
+
+// Driver code
+int main() {
+    Stack s;
+    init(&s);
+
+    // Example input
+    push(&s, 1);
+    push(&s, 2);
+    push(&s, 3);
+    push(&s, 4);
+
+    printf("Original Stack: ");
+    display(&s);
+
+    reverse(&s);
+
+    printf("Reversed Stack: ");
+    display(&s);
+
+    return 0;
+}
+Output 
+Original Stack: 1 2 3 4 
+Reversed Stack: 4 3 2 1 
+
