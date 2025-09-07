@@ -1,0 +1,88 @@
+/*Day 24 of 30 🗓
+
+Problem : Lowest Common Ancestor (LCA) in a Binary Tree
+You are given a binary tree and two distinct nodes within the tree. Your task is to find the lowest common ancestor (LCA) of these two nodes. The LCA of two nodes p and q is defined as the lowest node in the tree that has both p and q as descendants (where we allow a node to be a descendant of itself).
+
+Input :
+* A binary tree represented as a series of nodes where each node has references to its left and right child.
+* Two distinct nodes p and q from the tree.
+* Input: root = [3, 5, 1, 6, 2, 0, 8, null, null, 7, 4], p = 5, q = 1
+
+Output :
+Return the node that is the lowest common ancestor (LCA) of p and q.
+Output: 3
+*/
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definition of a tree node
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+// Function to create a new node
+struct Node* newNode(int data) {
+    struct Node* node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
+}
+
+// Function to find LCA
+struct Node* lowestCommonAncestor(struct Node* root, int p, int q) {
+    if (root == NULL) return NULL;
+
+    // If either p or q matches root, return root
+    if (root->data == p || root->data == q) {
+        return root;
+    }
+
+    // Search in left and right subtrees
+    struct Node* leftLCA = lowestCommonAncestor(root->left, p, q);
+    struct Node* rightLCA = lowestCommonAncestor(root->right, p, q);
+
+    // If both sides return non-null, root is the LCA
+    if (leftLCA && rightLCA) {
+        return root;
+    }
+
+    // Otherwise return non-null child
+    return (leftLCA != NULL) ? leftLCA : rightLCA;
+}
+
+// Utility function for testing
+int main() {
+    /*
+        Constructed binary tree:
+                3
+               / \
+              5   1
+             / \ / \
+            6  2 0  8
+              / \
+             7   4
+    */
+
+    struct Node* root = newNode(3);
+    root->left = newNode(5);
+    root->right = newNode(1);
+    root->left->left = newNode(6);
+    root->left->right = newNode(2);
+    root->right->left = newNode(0);
+    root->right->right = newNode(8);
+    root->left->right->left = newNode(7);
+    root->left->right->right = newNode(4);
+
+    int p = 5, q = 1;
+    struct Node* lca = lowestCommonAncestor(root, p, q);
+    if (lca != NULL)
+        printf("LCA of %d and %d is %d\n", p, q, lca->data);
+    else
+        printf("LCA not found.\n");
+
+    return 0;
+}
+output
+LCA of 5 and 1 is 3
