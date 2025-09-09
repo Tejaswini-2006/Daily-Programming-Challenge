@@ -1,0 +1,136 @@
+/*Day 26 of 30 
+
+Problem : Detect a Cycle in an Undirected Graph
+You are given an undirected graph represented by an adjacency list. Your task is to determine if the graph contains any cycle.
+A cycle is formed if you can traverse through a sequence of edges that starts and ends at the same vertex, with at least one edge in between.
+
+Input :
+* An integer V representing the number of vertices in the graph.
+* A list of edges, where each edge connects two vertices of the graph.
+* Input: V = 5, Edges = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 0]]
+
+Output :
+Return true if the graph contains a cycle, otherwise return false.
+Output: true
+
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+// Adjacency list node
+struct Node {
+    int vertex;
+    struct Node* next;
+};
+
+// Graph structure
+struct Graph {
+    int V;
+    struct Node** adjList;
+    bool* visited;
+};
+
+// Create a new adjacency list node
+struct Node* createNode(int v) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->vertex = v;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Create a graph with V vertices
+struct Graph* createGraph(int V) {
+    struct Graph* graph = (struct Graph*)malloc(sizeof(struct Graph));
+    graph->V = V;
+    graph->adjList = (struct Node**)malloc(V * sizeof(struct Node*));
+    graph->visited = (bool*)malloc(V * sizeof(bool));
+
+    for (int i = 0; i < V; i++) {
+        graph->adjList[i] = NULL;
+        graph->visited[i] = false;
+    }
+
+    return graph;
+}
+
+// Add edge (undirected graph)
+void addEdge(struct Graph* graph, int src, int dest) {
+    // Add src -> dest
+    struct Node* newNode = createNode(dest);
+    newNode->next = graph->adjList[src];
+    graph->adjList[src] = newNode;
+
+    // Add dest -> src
+    newNode = createNode(src);
+    newNode->next = graph->adjList[dest];
+    graph->adjList[dest] = newNode;
+}
+
+// DFS utility to detect cycle
+bool dfs(struct Graph* graph, int v, int parent) {
+    graph->visited[v] = true;
+
+    struct Node* temp = graph->adjList[v];
+    while (temp != NULL) {
+        int adj = temp->vertex;
+
+        if (!graph->visited[adj]) {
+            if (dfs(graph, adj, v))
+                return true;
+        } else if (adj != parent) {
+            return true; // Found a cycle
+        }
+
+        temp = temp->next;
+    }
+    return false;
+}
+
+// Detect cycle in the graph
+bool detectCycle(struct Graph* graph) {
+    for (int i = 0; i < graph->V; i++) {
+        if (!graph->visited[i]) {
+            if (dfs(graph, i, -1))
+                return true;
+        }
+    }
+    return false;
+}
+
+// Main function
+int main() {
+    int V, E;
+    printf("Enter number of vertices: ");
+    scanf("%d", &V);
+
+    printf("Enter number of edges: ");
+    scanf("%d", &E);
+
+    struct Graph* graph = createGraph(V);
+
+    printf("Enter edges (u v):\n");
+    for (int i = 0; i < E; i++) {
+        int u, v;
+        scanf("%d %d", &u, &v);
+        addEdge(graph, u, v);
+    }
+
+    if (detectCycle(graph))
+        printf("Graph contains a cycle.\n");
+    else
+        printf("Graph does not contain a cycle.\n");
+
+    return 0;
+}
+output
+Enter number of vertices: 5
+Enter number of edges: 5
+Enter edges (u v):
+0 1
+1 2
+2 3
+3 4
+4 0
+Graph contains a cycle.
+
