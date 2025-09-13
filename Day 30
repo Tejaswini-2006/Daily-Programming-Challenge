@@ -1,0 +1,100 @@
+/*Day 30 of 30 
+
+Problem : The Coin Change Problem
+You are given an integer array coins[] of size n, where each element represents the denomination of a coin. You are also given an integer amount, representing the total amount of money. The task is to find the minimum number of coins required to make up the given amount.
+If the amount cannot be formed by any combination of the coins, return -1.
+You can assume that you have an infinite supply of each denomination.
+
+Input :
+* An integer array coins[] where each element represents the value of a coin.
+* An integer amount representing the total amount of money.
+* coins = [1, 2, 5], amount = 11
+
+Output :
+* Return the minimum number of coins needed to make up the amount.
+* If the amount cannot be formed by any combination of coins, return -1.
+* Output - 3
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+// Function to find the minimum of two integers
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+// Function to solve the coin change problem
+int coinChange(int* coins, int coinsSize, int amount) {
+    // Create a dynamic programming array to store the minimum coins for each amount
+    int* dp = (int*)malloc((amount + 1) * sizeof(int));
+    
+    // Initialize the array with a value greater than amount,
+    // indicating that these amounts are not yet reachable.
+    for (int i = 0; i <= amount; i++) {
+        dp[i] = amount + 1; 
+    }
+    
+    // Base case: 0 coins are needed to make an amount of 0.
+    dp[0] = 0;
+
+    // Iterate through each amount from 1 to the target amount
+    for (int i = 1; i <= amount; i++) {
+        // Iterate through each coin denomination
+        for (int j = 0; j < coinsSize; j++) {
+            // If the current coin value is less than or equal to the current amount,
+            // we can consider using it.
+            if (coins[j] <= i) {
+                // The minimum coins for amount 'i' is the minimum of its current value
+                // and 1 (for the current coin) + the minimum coins for the remaining amount (i - coins[j]).
+                dp[i] = min(dp[i], 1 + dp[i - coins[j]]);
+            }
+        }
+    }
+    
+    // If dp[amount] is still the initial value (amount + 1), it means the amount
+    // cannot be formed by any combination of the coins.
+    if (dp[amount] > amount) {
+        free(dp);
+        return -1;
+    } else {
+        int result = dp[amount];
+        free(dp);
+        return result;
+    }
+}
+
+// Main function to test the code with the given examples
+int main() {
+    // Example 1: coins = [1, 2, 5], amount = 11
+    int coins1[] = {1, 2, 5};
+    int amount1 = 11;
+    printf("Input: coins = [1, 2, 5], amount = 11\n");
+    printf("Output: %d\n", coinChange(coins1, 3, amount1)); // Expected output: 3
+    printf("\n");
+
+    // Example 2: coins = [2], amount = 3
+    int coins2[] = {2};
+    int amount2 = 3;
+    printf("Input: coins = [2], amount = 3\n");
+    printf("Output: %d\n", coinChange(coins2, 1, amount2)); // Expected output: -1
+    printf("\n");
+
+    // Example 3: coins = [1], amount = 0
+    int coins3[] = {1};
+    int amount3 = 0;
+    printf("Input: coins = [1], amount = 0\n");
+    printf("Output: %d\n", coinChange(coins3, 1, amount3)); // Expected output: 0
+    printf("\n");
+
+    return 0;
+Output
+Input: coins = [1, 2, 5], amount = 11
+Output: 3
+
+Input: coins = [2], amount = 3
+Output: -1
+
+Input: coins = [1], amount = 0
+Output: 0
+}
